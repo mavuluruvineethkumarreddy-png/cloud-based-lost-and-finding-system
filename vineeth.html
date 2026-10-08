@@ -1,0 +1,2257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FindBack - Cloud Lost & Found</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial, sans-serif;
+}
+
+body{
+    background:#f4f7fb;
+    color:#1f2937;
+    transition:.3s;
+}
+
+body.dark{
+    background:#111827;
+    color:#f9fafb;
+}
+
+.hidden{
+    display:none!important;
+}
+
+button{
+    cursor:pointer;
+    border:none;
+}
+
+input,select,textarea{
+    width:100%;
+    padding:12px;
+    border:1px solid #d1d5db;
+    border-radius:8px;
+    outline:none;
+    margin-top:5px;
+}
+
+textarea{
+    resize:vertical;
+}
+
+.primary{
+    background:#2563eb;
+    color:white;
+    padding:12px 18px;
+    border-radius:8px;
+}
+
+.danger{
+    background:#ef4444;
+    color:white;
+    padding:9px 14px;
+    border-radius:7px;
+}
+
+.success{
+    background:#16a34a;
+    color:white;
+    padding:9px 14px;
+    border-radius:7px;
+}
+
+.secondary{
+    background:#e5e7eb;
+    padding:9px 14px;
+    border-radius:7px;
+}
+
+/* AUTH */
+
+.auth{
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    background:linear-gradient(135deg,#2563eb,#06b6d4);
+}
+
+.auth-box{
+    background:white;
+    width:420px;
+    max-width:92%;
+    padding:35px;
+    border-radius:18px;
+    box-shadow:0 20px 50px rgba(0,0,0,.2);
+}
+
+.auth-box h1{
+    text-align:center;
+    color:#2563eb;
+    margin-bottom:8px;
+}
+
+.auth-box .subtitle{
+    text-align:center;
+    color:#6b7280;
+    margin-bottom:25px;
+}
+
+.form-group{
+    margin-bottom:15px;
+}
+
+.form-group label{
+    font-weight:bold;
+}
+
+.password{
+    display:flex;
+}
+
+.password input{
+    border-radius:8px 0 0 8px;
+}
+
+.password button{
+    width:50px;
+    margin-top:5px;
+    background:#e5e7eb;
+    border-radius:0 8px 8px 0;
+}
+
+.auth .primary{
+    width:100%;
+    margin-top:5px;
+}
+
+.switch{
+    text-align:center;
+    margin-top:18px;
+}
+
+.switch span{
+    color:#2563eb;
+    font-weight:bold;
+    cursor:pointer;
+}
+
+.demo{
+    margin-top:15px;
+    background:#eff6ff;
+    padding:12px;
+    border-radius:8px;
+    font-size:13px;
+}
+
+/* NAVBAR */
+
+.navbar{
+    height:70px;
+    background:white;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:0 28px;
+    box-shadow:0 2px 12px rgba(0,0,0,.08);
+}
+
+.dark .navbar,
+.dark .sidebar,
+.dark .card,
+.dark .item-card,
+.dark .modal-box{
+    background:#1f2937;
+}
+
+.logo{
+    color:#2563eb;
+    font-size:24px;
+    font-weight:bold;
+}
+
+.nav-actions{
+    display:flex;
+    align-items:center;
+    gap:10px;
+}
+
+.nav-btn{
+    padding:9px 13px;
+    border-radius:7px;
+    background:#eff6ff;
+}
+
+.logout{
+    background:#ef4444;
+    color:white;
+}
+
+/* LAYOUT */
+
+.layout{
+    display:flex;
+    min-height:calc(100vh - 70px);
+}
+
+.sidebar{
+    width:235px;
+    background:white;
+    padding:20px 14px;
+    box-shadow:2px 0 10px rgba(0,0,0,.05);
+}
+
+.sidebar button{
+    width:100%;
+    padding:13px;
+    margin-bottom:7px;
+    background:transparent;
+    text-align:left;
+    border-radius:8px;
+    font-size:15px;
+}
+
+.sidebar button:hover{
+    background:#eff6ff;
+    color:#2563eb;
+}
+
+.content{
+    flex:1;
+    padding:30px;
+}
+
+.page-title{
+    margin-bottom:25px;
+}
+
+.page-title h1{
+    margin-bottom:5px;
+}
+
+/* STATS */
+
+.stats{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:18px;
+    margin-bottom:25px;
+}
+
+.stat{
+    background:white;
+    padding:22px;
+    border-radius:12px;
+    box-shadow:0 4px 15px rgba(0,0,0,.06);
+}
+
+.stat h4{
+    color:#6b7280;
+}
+
+.stat h2{
+    color:#2563eb;
+    margin-top:8px;
+}
+
+/* SEARCH */
+
+.search{
+    display:flex;
+    gap:10px;
+    margin-bottom:20px;
+}
+
+.search input,
+.search select{
+    margin:0;
+}
+
+.search input{
+    flex:1;
+}
+
+/* ITEMS */
+
+.item-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(280px,1fr));
+    gap:20px;
+}
+
+.item-card{
+    background:white;
+    border-radius:14px;
+    overflow:hidden;
+    box-shadow:0 4px 18px rgba(0,0,0,.07);
+}
+
+.item-icon{
+    height:150px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:65px;
+    background:linear-gradient(135deg,#2563eb,#06b6d4);
+}
+
+.item-body{
+    padding:18px;
+}
+
+.item-body h3{
+    margin-bottom:8px;
+}
+
+.item-body p{
+    margin:6px 0;
+    color:#6b7280;
+}
+
+.badge{
+    display:inline-block;
+    padding:5px 9px;
+    border-radius:20px;
+    font-size:12px;
+    font-weight:bold;
+}
+
+.lost{
+    background:#fee2e2;
+    color:#b91c1c;
+}
+
+.found{
+    background:#dcfce7;
+    color:#15803d;
+}
+
+.pending{
+    background:#fef3c7;
+    color:#92400e;
+}
+
+.claimed{
+    background:#dbeafe;
+    color:#1d4ed8;
+}
+
+.item-actions{
+    display:flex;
+    gap:8px;
+    margin-top:15px;
+}
+
+.item-actions button{
+    flex:1;
+}
+
+/* CARD */
+
+.card{
+    background:white;
+    padding:22px;
+    border-radius:12px;
+    box-shadow:0 4px 15px rgba(0,0,0,.06);
+    margin-bottom:20px;
+}
+
+/* TABLE */
+
+.table-container{
+    overflow-x:auto;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+}
+
+th,td{
+    padding:13px;
+    border-bottom:1px solid #e5e7eb;
+    text-align:left;
+}
+
+th{
+    background:#eff6ff;
+}
+
+/* MODAL */
+
+.modal{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.6);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    z-index:100;
+}
+
+.modal-box{
+    width:500px;
+    max-width:94%;
+    max-height:90vh;
+    overflow-y:auto;
+    background:white;
+    padding:25px;
+    border-radius:15px;
+}
+
+.modal-box h2{
+    margin-bottom:18px;
+}
+
+.close{
+    float:right;
+    width:30px;
+    height:30px;
+    background:#ef4444;
+    color:white;
+    border-radius:50%;
+}
+
+/* NOTIFICATION */
+
+.notification{
+    position:fixed;
+    top:85px;
+    right:25px;
+    background:#111827;
+    color:white;
+    padding:14px 20px;
+    border-radius:8px;
+    z-index:200;
+    display:none;
+}
+
+/* PROFILE */
+
+.profile-row{
+    margin-bottom:18px;
+}
+
+.profile-row strong{
+    display:block;
+    margin-bottom:5px;
+}
+
+/* RESPONSIVE */
+
+@media(max-width:900px){
+
+    .stats{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+    .sidebar{
+        width:190px;
+    }
+}
+
+@media(max-width:650px){
+
+    .layout{
+        flex-direction:column;
+    }
+
+    .sidebar{
+        width:100%;
+        display:flex;
+        overflow-x:auto;
+    }
+
+    .sidebar button{
+        min-width:130px;
+    }
+
+    .stats{
+        grid-template-columns:1fr;
+    }
+
+    .content{
+        padding:15px;
+    }
+
+    .navbar{
+        padding:0 12px;
+    }
+
+    .username{
+        display:none;
+    }
+
+    .search{
+        flex-direction:column;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<!-- ================= LOGIN ================= -->
+
+<div id="loginScreen" class="auth">
+
+<div class="auth-box">
+
+<h1>🔎 FindBack</h1>
+<p class="subtitle">Cloud Lost & Found System</p>
+
+<form id="loginForm">
+
+<div class="form-group">
+<label>Email</label>
+<input type="email" id="loginEmail" required>
+</div>
+
+<div class="form-group">
+<label>Password</label>
+
+<div class="password">
+<input type="password" id="loginPassword" required>
+<button type="button"
+onclick="togglePassword('loginPassword')">
+👁
+</button>
+</div>
+
+</div>
+
+<button class="primary">Login</button>
+
+</form>
+
+<div class="demo">
+<b>Demo Admin</b><br>
+Email: admin@findback.com<br>
+Password: admin123
+</div>
+
+<div class="switch">
+Don't have an account?
+<span onclick="showSignup()">Sign Up</span>
+</div>
+
+</div>
+</div>
+
+
+<!-- ================= SIGNUP ================= -->
+
+<div id="signupScreen" class="auth hidden">
+
+<div class="auth-box">
+
+<h1>📝 Create Account</h1>
+<p class="subtitle">Join FindBack</p>
+
+<form id="signupForm">
+
+<div class="form-group">
+<label>Full Name</label>
+<input type="text" id="signupName" required>
+</div>
+
+<div class="form-group">
+<label>Email</label>
+<input type="email" id="signupEmail" required>
+</div>
+
+<div class="form-group">
+
+<label>Password</label>
+
+<div class="password">
+
+<input
+type="password"
+id="signupPassword"
+minlength="6"
+required>
+
+<button type="button"
+onclick="togglePassword('signupPassword')">
+👁
+</button>
+
+</div>
+
+</div>
+
+<div class="form-group">
+
+<label>Account Type</label>
+
+<select id="signupRole">
+
+<option value="user">User</option>
+<option value="admin">Admin</option>
+
+</select>
+
+</div>
+
+<button class="primary">
+Create Account
+</button>
+
+</form>
+
+<div class="switch">
+Already registered?
+<span onclick="showLogin()">Login</span>
+</div>
+
+</div>
+</div>
+
+
+<!-- ================= APPLICATION ================= -->
+
+<div id="application" class="hidden">
+
+<nav class="navbar">
+
+<div class="logo">
+🔎 FindBack
+</div>
+
+<div class="nav-actions">
+
+<span class="username" id="welcome"></span>
+
+<button class="nav-btn"
+onclick="toggleDarkMode()">
+🌙
+</button>
+
+<button class="nav-btn"
+onclick="notification('🔔 No new notifications')">
+🔔
+</button>
+
+<button class="nav-btn logout"
+onclick="logout()">
+Logout
+</button>
+
+</div>
+
+</nav>
+
+
+<div class="layout">
+
+<!-- SIDEBAR -->
+
+<aside class="sidebar">
+
+<button onclick="showPage('dashboard')">
+🏠 Dashboard
+</button>
+
+<button onclick="showPage('items')">
+🔍 Browse Items
+</button>
+
+<button onclick="openReport('Lost')">
+📦 Report Lost Item
+</button>
+
+<button onclick="openReport('Found')">
+📍 Report Found Item
+</button>
+
+<button onclick="showPage('myreports')">
+📋 My Reports
+</button>
+
+<button onclick="showPage('favorites')">
+❤️ Favorites
+</button>
+
+<button onclick="showPage('profile')">
+👤 Profile
+</button>
+
+<button id="adminButton"
+onclick="showPage('admin')">
+🛡️ Admin Panel
+</button>
+
+</aside>
+
+
+<main class="content">
+
+<!-- DASHBOARD -->
+
+<section id="dashboardPage">
+
+<div class="page-title">
+
+<h1>Dashboard</h1>
+
+<p>
+Welcome to your Lost & Found cloud dashboard.
+</p>
+
+</div>
+
+<div class="stats">
+
+<div class="stat">
+<h4>Total Reports</h4>
+<h2 id="totalReports">0</h2>
+</div>
+
+<div class="stat">
+<h4>Lost Items</h4>
+<h2 id="lostCount">0</h2>
+</div>
+
+<div class="stat">
+<h4>Found Items</h4>
+<h2 id="foundCount">0</h2>
+</div>
+
+<div class="stat">
+<h4>My Reports</h4>
+<h2 id="myReportCount">0</h2>
+</div>
+
+</div>
+
+<div class="card">
+
+<h2>🚀 Latest System Features</h2>
+
+<br>
+
+<p>🔐 Secure user authentication</p>
+<p>👥 User and administrator accounts</p>
+<p>📦 Lost item reporting</p>
+<p>📍 Found item reporting</p>
+<p>🔎 Advanced search and filtering</p>
+<p>🤝 Item claim system</p>
+<p>❤️ Favorites</p>
+<p>🔔 Notification system</p>
+<p>📊 Dashboard analytics</p>
+<p>🌙 Dark mode</p>
+<p>📱 Responsive design</p>
+<p>☁️ Cloud-ready data architecture</p>
+
+</div>
+
+</section>
+
+
+<!-- BROWSE ITEMS -->
+
+<section id="itemsPage" class="hidden">
+
+<div class="page-title">
+<h1>🔍 Browse Items</h1>
+</div>
+
+<div class="search">
+
+<input
+type="text"
+id="search"
+placeholder="Search item, location..."
+oninput="displayItems()">
+
+<select id="filterType"
+onchange="displayItems()">
+
+<option value="All">All</option>
+<option value="Lost">Lost</option>
+<option value="Found">Found</option>
+
+</select>
+
+<select id="filterCategory"
+onchange="displayItems()">
+
+<option value="All">All Categories</option>
+<option value="Electronics">Electronics</option>
+<option value="Documents">Documents</option>
+<option value="Wallet">Wallet</option>
+<option value="Keys">Keys</option>
+<option value="Bag">Bag</option>
+<option value="Other">Other</option>
+
+</select>
+
+</div>
+
+<div id="itemGrid" class="item-grid"></div>
+
+</section>
+
+
+<!-- MY REPORTS -->
+
+<section id="myreportsPage" class="hidden">
+
+<div class="page-title">
+<h1>📋 My Reports</h1>
+</div>
+
+<div class="card">
+
+<div class="table-container">
+
+<table>
+
+<thead>
+
+<tr>
+<th>Item</th>
+<th>Type</th>
+<th>Location</th>
+<th>Status</th>
+<th>Actions</th>
+</tr>
+
+</thead>
+
+<tbody id="myReportsTable"></tbody>
+
+</table>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- FAVORITES -->
+
+<section id="favoritesPage" class="hidden">
+
+<div class="page-title">
+<h1>❤️ Favorites</h1>
+</div>
+
+<div id="favoriteGrid" class="item-grid"></div>
+
+</section>
+
+
+<!-- PROFILE -->
+
+<section id="profilePage" class="hidden">
+
+<div class="page-title">
+<h1>👤 My Profile</h1>
+</div>
+
+<div class="card">
+
+<div class="profile-row">
+<strong>Name</strong>
+<span id="profileName"></span>
+</div>
+
+<div class="profile-row">
+<strong>Email</strong>
+<span id="profileEmail"></span>
+</div>
+
+<div class="profile-row">
+<strong>Account Type</strong>
+<span id="profileRole"></span>
+</div>
+
+<div class="profile-row">
+<strong>Platform</strong>
+<span>FindBack Cloud</span>
+</div>
+
+</div>
+
+</section>
+
+
+<!-- ADMIN -->
+
+<section id="adminPage" class="hidden">
+
+<div class="page-title">
+<h1>🛡️ Admin Panel</h1>
+</div>
+
+<div class="stats">
+
+<div class="stat">
+<h4>Users</h4>
+<h2 id="adminUsers">0</h2>
+</div>
+
+<div class="stat">
+<h4>Reports</h4>
+<h2 id="adminReports">0</h2>
+</div>
+
+<div class="stat">
+<h4>Claims</h4>
+<h2 id="adminClaims">0</h2>
+</div>
+
+<div class="stat">
+<h4>Resolved</h4>
+<h2 id="adminResolved">0</h2>
+</div>
+
+</div>
+
+<div class="card">
+
+<h2>All Reports</h2>
+
+<br>
+
+<div class="table-container">
+
+<table>
+
+<thead>
+
+<tr>
+<th>Item</th>
+<th>Type</th>
+<th>User</th>
+<th>Location</th>
+<th>Status</th>
+<th>Action</th>
+</tr>
+
+</thead>
+
+<tbody id="adminTable"></tbody>
+
+</table>
+
+</div>
+
+</div>
+
+</section>
+
+</main>
+</div>
+</div>
+
+
+<!-- ================= REPORT MODAL ================= -->
+
+<div id="reportModal" class="modal hidden">
+
+<div class="modal-box">
+
+<button class="close"
+onclick="closeReport()">
+×
+</button>
+
+<h2 id="reportTitle">
+Report Item
+</h2>
+
+<form id="reportForm">
+
+<div class="form-group">
+
+<label>Item Name</label>
+
+<input
+type="text"
+id="itemName"
+required>
+
+</div>
+
+<div class="form-group">
+
+<label>Category</label>
+
+<select id="itemCategory">
+
+<option>Electronics</option>
+<option>Documents</option>
+<option>Wallet</option>
+<option>Keys</option>
+<option>Bag</option>
+<option>Other</option>
+
+</select>
+
+</div>
+
+<div class="form-group">
+
+<label>Description</label>
+
+<textarea
+id="itemDescription"
+rows="3"
+required></textarea>
+
+</div>
+
+<div class="form-group">
+
+<label>Location</label>
+
+<input
+type="text"
+id="itemLocation"
+placeholder="Where was it lost/found?"
+required>
+
+</div>
+
+<div class="form-group">
+
+<label>Date</label>
+
+<input
+type="date"
+id="itemDate"
+required>
+
+</div>
+
+<div class="form-group">
+
+<label>Priority</label>
+
+<select id="itemPriority">
+
+<option>Normal</option>
+<option>High</option>
+<option>Urgent</option>
+
+</select>
+
+</div>
+
+<button class="primary">
+Submit Report
+</button>
+
+</form>
+
+</div>
+</div>
+
+
+<div id="notification"
+class="notification"></div>
+
+
+<script>
+
+/* ================= DATA ================= */
+
+let users =
+JSON.parse(localStorage.getItem("findbackUsers")) || [
+
+{
+name:"Administrator",
+email:"admin@findback.com",
+password:"admin123",
+role:"admin"
+}
+
+];
+
+
+let items =
+JSON.parse(localStorage.getItem("findbackItems")) || [
+
+{
+id:1,
+name:"iPhone 15",
+category:"Electronics",
+description:"Black iPhone with transparent case",
+location:"College Library",
+date:"2026-10-05",
+type:"Lost",
+priority:"High",
+user:"student@example.com",
+status:"Open",
+icon:"📱"
+},
+
+{
+id:2,
+name:"Black Wallet",
+category:"Wallet",
+description:"Black leather wallet",
+location:"Bus Stop",
+date:"2026-10-06",
+type:"Found",
+priority:"Normal",
+user:"admin@findback.com",
+status:"Open",
+icon:"👛"
+},
+
+{
+id:3,
+name:"College ID Card",
+category:"Documents",
+description:"Student identity card",
+location:"College Canteen",
+date:"2026-10-07",
+type:"Lost",
+priority:"Urgent",
+user:"student@example.com",
+status:"Open",
+icon:"🪪"
+}
+
+];
+
+
+let favorites =
+JSON.parse(
+localStorage.getItem("findbackFavorites")
+) || [];
+
+
+let currentUser =
+JSON.parse(
+localStorage.getItem("findbackCurrentUser")
+) || null;
+
+
+/* ================= START ================= */
+
+window.onload=function(){
+
+if(currentUser){
+openApplication();
+}
+
+};
+
+
+/* ================= AUTH ================= */
+
+function showSignup(){
+
+document
+.getElementById("loginScreen")
+.classList.add("hidden");
+
+document
+.getElementById("signupScreen")
+.classList.remove("hidden");
+
+}
+
+
+function showLogin(){
+
+document
+.getElementById("signupScreen")
+.classList.add("hidden");
+
+document
+.getElementById("loginScreen")
+.classList.remove("hidden");
+
+}
+
+
+function togglePassword(id){
+
+let input=document.getElementById(id);
+
+input.type=
+input.type==="password"
+?"text"
+:"password";
+
+}
+
+
+/* LOGIN */
+
+document
+.getElementById("loginForm")
+.addEventListener("submit",function(e){
+
+e.preventDefault();
+
+let email=
+document.getElementById("loginEmail").value;
+
+let password=
+document.getElementById("loginPassword").value;
+
+let user=
+users.find(
+u =>
+u.email===email &&
+u.password===password
+);
+
+if(!user){
+
+notification("❌ Invalid email or password");
+
+return;
+
+}
+
+currentUser=user;
+
+localStorage.setItem(
+"findbackCurrentUser",
+JSON.stringify(user)
+);
+
+openApplication();
+
+});
+
+
+/* SIGNUP */
+
+document
+.getElementById("signupForm")
+.addEventListener("submit",function(e){
+
+e.preventDefault();
+
+let name=
+document.getElementById("signupName").value;
+
+let email=
+document.getElementById("signupEmail").value;
+
+let password=
+document.getElementById("signupPassword").value;
+
+let role=
+document.getElementById("signupRole").value;
+
+
+if(users.some(u=>u.email===email)){
+
+notification("❌ Email already exists");
+
+return;
+
+}
+
+
+users.push({
+name,
+email,
+password,
+role
+});
+
+
+localStorage.setItem(
+"findbackUsers",
+JSON.stringify(users)
+);
+
+
+notification("✅ Account created");
+
+setTimeout(showLogin,1000);
+
+});
+
+
+/* LOGOUT */
+
+function logout(){
+
+localStorage.removeItem(
+"findbackCurrentUser"
+);
+
+currentUser=null;
+
+document
+.getElementById("application")
+.classList.add("hidden");
+
+document
+.getElementById("loginScreen")
+.classList.remove("hidden");
+
+}
+
+
+/* ================= APP ================= */
+
+function openApplication(){
+
+document
+.getElementById("loginScreen")
+.classList.add("hidden");
+
+document
+.getElementById("signupScreen")
+.classList.add("hidden");
+
+document
+.getElementById("application")
+.classList.remove("hidden");
+
+
+document
+.getElementById("welcome")
+.textContent=
+"Hi, "+currentUser.name;
+
+
+document
+.getElementById("adminButton")
+.style.display=
+currentUser.role==="admin"
+?"block"
+:"none";
+
+
+updateDashboard();
+
+displayItems();
+
+}
+
+
+/* ================= NAVIGATION ================= */
+
+function showPage(page){
+
+let pages=[
+"dashboard",
+"items",
+"myreports",
+"favorites",
+"profile",
+"admin"
+];
+
+pages.forEach(p=>{
+
+document
+.getElementById(p+"Page")
+.classList.add("hidden");
+
+});
+
+
+document
+.getElementById(page+"Page")
+.classList.remove("hidden");
+
+
+if(page==="dashboard")
+updateDashboard();
+
+if(page==="items")
+displayItems();
+
+if(page==="myreports")
+displayMyReports();
+
+if(page==="favorites")
+displayFavorites();
+
+if(page==="profile")
+displayProfile();
+
+if(page==="admin")
+displayAdmin();
+
+}
+
+
+/* ================= DASHBOARD ================= */
+
+function updateDashboard(){
+
+document
+.getElementById("totalReports")
+.textContent=items.length;
+
+document
+.getElementById("lostCount")
+.textContent=
+items.filter(i=>i.type==="Lost").length;
+
+document
+.getElementById("foundCount")
+.textContent=
+items.filter(i=>i.type==="Found").length;
+
+document
+.getElementById("myReportCount")
+.textContent=
+items.filter(
+i=>i.user===currentUser.email
+).length;
+
+}
+
+
+/* ================= ITEMS ================= */
+
+function displayItems(){
+
+let grid=
+document.getElementById("itemGrid");
+
+if(!grid)return;
+
+let search=
+(document.getElementById("search")?.value||"")
+.toLowerCase();
+
+let type=
+document.getElementById("filterType")?.value
+||"All";
+
+let category=
+document.getElementById("filterCategory")?.value
+||"All";
+
+
+let filtered=items.filter(item=>{
+
+let searchMatch=
+item.name.toLowerCase().includes(search) ||
+item.location.toLowerCase().includes(search) ||
+item.description.toLowerCase().includes(search);
+
+let typeMatch=
+type==="All" || item.type===type;
+
+let categoryMatch=
+category==="All" ||
+item.category===category;
+
+return searchMatch &&
+typeMatch &&
+categoryMatch;
+
+});
+
+
+grid.innerHTML="";
+
+
+if(filtered.length===0){
+
+grid.innerHTML=
+"<p>No items found.</p>";
+
+return;
+
+}
+
+
+filtered.forEach(item=>{
+
+let favorite=
+favorites.some(
+f=>
+f.user===currentUser.email &&
+f.itemId===item.id
+);
+
+
+grid.innerHTML+=`
+
+<div class="item-card">
+
+<div class="item-icon">
+${item.icon}
+</div>
+
+<div class="item-body">
+
+<h3>${item.name}</h3>
+
+<span class="badge
+${item.type==="Lost"?"lost":"found"}">
+${item.type}
+</span>
+
+<span class="badge pending">
+${item.status}
+</span>
+
+<p>
+📂 ${item.category}
+</p>
+
+<p>
+📍 ${item.location}
+</p>
+
+<p>
+📅 ${item.date}
+</p>
+
+<p>
+📝 ${item.description}
+</p>
+
+<p>
+⚡ Priority: ${item.priority}
+</p>
+
+<div class="item-actions">
+
+<button
+class="primary"
+onclick="claimItem(${item.id})">
+
+${item.type==="Found"
+?"Claim Item"
+:"Contact Finder"}
+
+</button>
+
+<button
+class="secondary"
+onclick="toggleFavorite(${item.id})">
+
+${favorite?"❤️":"🤍"}
+
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+`;
+
+});
+
+}
+
+
+/* ================= REPORT ================= */
+
+let reportType="Lost";
+let editingId=null;
+
+
+function openReport(type){
+
+reportType=type;
+editingId=null;
+
+document
+.getElementById("reportTitle")
+.textContent=
+"Report "+type+" Item";
+
+document
+.getElementById("reportModal")
+.classList.remove("hidden");
+
+
+document
+.getElementById("reportForm")
+.reset();
+
+
+document
+.getElementById("itemDate")
+.value=
+new Date().toISOString().split("T")[0];
+
+}
+
+
+function closeReport(){
+
+document
+.getElementById("reportModal")
+.classList.add("hidden");
+
+}
+
+
+/* SUBMIT REPORT */
+
+document
+.getElementById("reportForm")
+.addEventListener("submit",function(e){
+
+e.preventDefault();
+
+
+let item={
+
+id:editingId || Date.now(),
+
+name:
+document.getElementById("itemName").value,
+
+category:
+document.getElementById("itemCategory").value,
+
+description:
+document.getElementById("itemDescription").value,
+
+location:
+document.getElementById("itemLocation").value,
+
+date:
+document.getElementById("itemDate").value,
+
+priority:
+document.getElementById("itemPriority").value,
+
+type:reportType,
+
+user:currentUser.email,
+
+status:"Open",
+
+icon:getIcon(
+document.getElementById("itemCategory").value
+)
+
+};
+
+
+if(editingId){
+
+let index=
+items.findIndex(
+i=>i.id===editingId
+);
+
+items[index]=item;
+
+notification("✅ Report updated");
+
+}else{
+
+items.push(item);
+
+notification(
+"✅ "+reportType+" report submitted"
+);
+
+}
+
+
+localStorage.setItem(
+"findbackItems",
+JSON.stringify(items)
+);
+
+
+closeReport();
+
+updateDashboard();
+
+displayItems();
+
+});
+
+
+/* ICON */
+
+function getIcon(category){
+
+let icons={
+
+Electronics:"📱",
+Documents:"📄",
+Wallet:"👛",
+Keys:"🔑",
+Bag:"🎒",
+Other:"📦"
+
+};
+
+return icons[category]||"📦";
+
+}
+
+
+/* ================= FAVORITES ================= */
+
+function toggleFavorite(id){
+
+let index=
+favorites.findIndex(
+f=>
+f.user===currentUser.email &&
+f.itemId===id
+);
+
+
+if(index>=0){
+
+favorites.splice(index,1);
+
+notification(
+"Removed from favorites"
+);
+
+}else{
+
+favorites.push({
+
+user:currentUser.email,
+itemId:id
+
+});
+
+notification(
+"❤️ Added to favorites"
+);
+
+}
+
+
+localStorage.setItem(
+"findbackFavorites",
+JSON.stringify(favorites)
+);
+
+
+displayItems();
+
+displayFavorites();
+
+}
+
+
+function displayFavorites(){
+
+let grid=
+document.getElementById("favoriteGrid");
+
+let list=
+favorites
+.filter(
+f=>f.user===currentUser.email
+)
+.map(
+f=>items.find(
+i=>i.id===f.itemId
+)
+)
+.filter(Boolean);
+
+
+grid.innerHTML="";
+
+
+if(list.length===0){
+
+grid.innerHTML=
+"<p>No favorite items.</p>";
+
+return;
+
+}
+
+
+list.forEach(item=>{
+
+grid.innerHTML+=`
+
+<div class="item-card">
+
+<div class="item-icon">
+${item.icon}
+</div>
+
+<div class="item-body">
+
+<h3>${item.name}</h3>
+
+<p>${item.type}</p>
+
+<p>📍 ${item.location}</p>
+
+<p>${item.description}</p>
+
+<button
+class="primary"
+onclick="claimItem(${item.id})">
+
+View / Claim
+
+</button>
+
+</div>
+
+</div>
+
+`;
+
+});
+
+}
+
+
+/* ================= CLAIM ================= */
+
+function claimItem(id){
+
+let item=
+items.find(i=>i.id===id);
+
+if(!item)return;
+
+
+if(item.user===currentUser.email){
+
+notification(
+"ℹ️ This is your own report."
+);
+
+return;
+
+}
+
+
+item.status="Claim Requested";
+
+
+localStorage.setItem(
+"findbackItems",
+JSON.stringify(items)
+);
+
+
+notification(
+"🤝 Claim request sent successfully!"
+);
+
+
+displayItems();
+
+}
+
+
+/* ================= MY REPORTS ================= */
+
+function displayMyReports(){
+
+let table=
+document.getElementById(
+"myReportsTable"
+);
+
+
+let mine=
+items.filter(
+i=>i.user===currentUser.email
+);
+
+
+table.innerHTML="";
+
+
+if(mine.length===0){
+
+table.innerHTML=`
+<tr>
+<td colspan="5">
+No reports yet.
+</td>
+</tr>
+`;
+
+return;
+
+}
+
+
+mine.forEach(item=>{
+
+table.innerHTML+=`
+
+<tr>
+
+<td>${item.name}</td>
+
+<td>${item.type}</td>
+
+<td>${item.location}</td>
+
+<td>${item.status}</td>
+
+<td>
+
+<button
+class="secondary"
+onclick="editItem(${item.id})">
+
+Edit
+
+</button>
+
+<button
+class="danger"
+onclick="deleteItem(${item.id})">
+
+Delete
+
+</button>
+
+</td>
+
+</tr>
+
+`;
+
+});
+
+}
+
+
+/* ================= EDIT ================= */
+
+function editItem(id){
+
+let item=
+items.find(i=>i.id===id);
+
+if(!item)return;
+
+
+if(item.user!==currentUser.email){
+
+notification(
+"❌ You can edit only your reports."
+);
+
+return;
+
+}
+
+
+editingId=id;
+reportType=item.type;
+
+
+document
+.getElementById("reportTitle")
+.textContent=
+"Edit Report";
+
+
+document
+.getElementById("itemName")
+.value=item.name;
+
+document
+.getElementById("itemCategory")
+.value=item.category;
+
+document
+.getElementById("itemDescription")
+.value=item.description;
+
+document
+.getElementById("itemLocation")
+.value=item.location;
+
+document
+.getElementById("itemDate")
+.value=item.date;
+
+document
+.getElementById("itemPriority")
+.value=item.priority;
+
+
+document
+.getElementById("reportModal")
+.classList.remove("hidden");
+
+}
+
+
+/* ================= DELETE ================= */
+
+function deleteItem(id){
+
+if(!confirm("Delete this report?"))
+return;
+
+
+items=
+items.filter(i=>i.id!==id);
+
+
+localStorage.setItem(
+"findbackItems",
+JSON.stringify(items)
+);
+
+
+notification(
+"🗑️ Report deleted"
+);
+
+
+displayMyReports();
+updateDashboard();
+
+}
+
+
+/* ================= PROFILE ================= */
+
+function displayProfile(){
+
+document
+.getElementById("profileName")
+.textContent=
+currentUser.name;
+
+document
+.getElementById("profileEmail")
+.textContent=
+currentUser.email;
+
+document
+.getElementById("profileRole")
+.textContent=
+currentUser.role==="admin"
+?"Administrator"
+:"Normal User";
+
+}
+
+
+/* ================= ADMIN ================= */
+
+function displayAdmin(){
+
+if(currentUser.role!=="admin"){
+
+notification(
+"❌ Admin access required"
+);
+
+return;
+
+}
+
+
+document
+.getElementById("adminUsers")
+.textContent=
+users.length;
+
+document
+.getElementById("adminReports")
+.textContent=
+items.length;
+
+document
+.getElementById("adminClaims")
+.textContent=
+items.filter(
+i=>i.status==="Claim Requested"
+).length;
+
+document
+.getElementById("adminResolved")
+.textContent=
+items.filter(
+i=>i.status==="Resolved"
+).length;
+
+
+let table=
+document.getElementById(
+"adminTable"
+);
+
+table.innerHTML="";
+
+
+items.forEach(item=>{
+
+table.innerHTML+=`
+
+<tr>
+
+<td>${item.name}</td>
+
+<td>${item.type}</td>
+
+<td>${item.user}</td>
+
+<td>${item.location}</td>
+
+<td>${item.status}</td>
+
+<td>
+
+<button
+class="success"
+onclick="resolveItem(${item.id})">
+
+Resolve
+
+</button>
+
+<button
+class="danger"
+onclick="adminDelete(${item.id})">
+
+Delete
+
+</button>
+
+</td>
+
+</tr>
+
+`;
+
+});
+
+}
+
+
+/* RESOLVE */
+
+function resolveItem(id){
+
+let item=
+items.find(i=>i.id===id);
+
+if(item){
+
+item.status="Resolved";
+
+localStorage.setItem(
+"findbackItems",
+JSON.stringify(items)
+);
+
+notification(
+"✅ Item marked as resolved"
+);
+
+displayAdmin();
+updateDashboard();
+
+}
+
+}
+
+
+/* ADMIN DELETE */
+
+function adminDelete(id){
+
+if(!confirm("Delete this report?"))
+return;
+
+
+items=
+items.filter(
+i=>i.id!==id
+);
+
+
+localStorage.setItem(
+"findbackItems",
+JSON.stringify(items)
+);
+
+
+displayAdmin();
+updateDashboard();
+
+notification(
+"🗑️ Report removed"
+);
+
+}
+
+
+/* ================= DARK MODE ================= */
+
+function toggleDarkMode(){
+
+document
+.body
+.classList
+.toggle("dark");
+
+}
+
+
+/* ================= NOTIFICATION ================= */
+
+function notification(message){
+
+let box=
+document.getElementById(
+"notification"
+);
+
+box.textContent=message;
+
+box.style.display="block";
+
+setTimeout(()=>{
+
+box.style.display="none";
+
+},2500);
+
+}
+
+
+/* ================= SAVE INITIAL DATA ================= */
+
+localStorage.setItem(
+"findbackUsers",
+JSON.stringify(users)
+);
+
+localStorage.setItem(
+"findbackItems",
+JSON.stringify(items)
+);
+
+</script>
+
+</body>
+</html>
